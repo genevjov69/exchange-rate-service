@@ -1,0 +1,5 @@
+services:
+  currency-exchange-service:
+    build: .
+    ports:
+      - "8080:8080"

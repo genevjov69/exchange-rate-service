@@ -1,6 +1,6 @@
 package io.genevjov.ces.controller;
 
-import io.genevjov.ces.dto.response.AllExchangeRatesResponse;
+import io.genevjov.ces.dto.response.BatchExchangeRatesResponse;
 import io.genevjov.ces.dto.response.ErrorResponse;
 import io.genevjov.ces.dto.response.ExchangeRateResponse;
 import io.genevjov.ces.service.ExchangeRateService;
@@ -68,7 +68,7 @@ public class ExchangeRateController {
             description = "Fetches and caches the latest available rates for the supplied base currency. Cache key is the normalized base currency.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Exchange rates returned",
-                    content = @Content(schema = @Schema(implementation = AllExchangeRatesResponse.class),
+                    content = @Content(schema = @Schema(implementation = BatchExchangeRatesResponse.class),
                             examples = @ExampleObject(value = """
                                     {
                                       "base": "EUR",
@@ -86,7 +86,7 @@ public class ExchangeRateController {
             @ApiResponse(responseCode = "502", description = "All external providers failed",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public AllExchangeRatesResponse getAllExchangeRates(
+    public BatchExchangeRatesResponse getAllExchangeRates(
             @Parameter(description = "Base currency code", example = "EUR")
             @PathVariable Currency base) {
         return exchangeRateService.getAllExchangeRates(base);

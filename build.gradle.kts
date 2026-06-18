@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 plugins {
     java
     id("org.springframework.boot") version "3.5.15"
@@ -10,12 +12,16 @@ description = "currency-exchange-service"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 repositories {
     mavenCentral()
+}
+
+springBoot {
+    mainClass.set("io.genevjov.ces.CurrencyExchangeServiceApplication")
 }
 
 dependencies {
@@ -35,4 +41,8 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.named<BootJar>("bootJar") {
+    archiveFileName.set("app.jar")
 }

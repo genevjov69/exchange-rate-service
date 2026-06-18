@@ -9,7 +9,7 @@ import java.util.Currency;
 import java.util.Map;
 
 @Schema(description = "Latest exchange rates for one base currency")
-public record AllExchangeRatesResponse(
+public record BatchExchangeRatesResponse(
         @Schema(example = "EUR")
         Currency base,
         @Schema(example = "{\"USD\":1.08,\"GBP\":0.84,\"BGN\":1.9558}")

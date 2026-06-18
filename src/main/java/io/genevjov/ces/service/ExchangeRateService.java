@@ -1,6 +1,6 @@
 package io.genevjov.ces.service;
 
-import io.genevjov.ces.dto.response.AllExchangeRatesResponse;
+import io.genevjov.ces.dto.response.BatchExchangeRatesResponse;
 import io.genevjov.ces.dto.response.ExchangeRateResponse;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -16,7 +16,7 @@ public class ExchangeRateService {
         return null;
     }
 
-    public AllExchangeRatesResponse getAllExchangeRates(Currency base) {
+    public BatchExchangeRatesResponse getAllExchangeRates(Currency base) {
         return null;
     }
 
