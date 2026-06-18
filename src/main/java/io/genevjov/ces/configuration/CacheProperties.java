@@ -14,5 +14,5 @@ import java.time.Duration;
 @Component
 public class CacheProperties {
 
-    Duration ttl = Duration.ofMinutes(1);
+    Duration ttl;
 }

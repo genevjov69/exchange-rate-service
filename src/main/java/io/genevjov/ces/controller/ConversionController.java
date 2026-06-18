@@ -45,7 +45,7 @@ public class ConversionController {
                                       "rate": 1.08,
                                       "convertedAmount": 108.0000,
                                       "provider": "EXCHANGERATE_HOST",
-                                      "asOf": "2026-06-17T10:00:00Z"
+                                      "timestamp": "2026-06-17T10:00:00Z"
                                     }
                                     """))),
             @ApiResponse(responseCode = "400", description = "Invalid currency or amount",
@@ -89,7 +89,7 @@ public class ConversionController {
                                         }
                                       ],
                                       "provider": "EXCHANGERATE_HOST",
-                                      "asOf": "2026-06-17T10:00:00Z"
+                                      "timestamp": "2026-06-17T10:00:00Z"
                                     }
                                     """))),
             @ApiResponse(responseCode = "400", description = "Invalid currency, amount, or targets list",

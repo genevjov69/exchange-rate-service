@@ -44,7 +44,7 @@ public class ExchangeRateController {
                                       "target": "USD",
                                       "rate": 1.08,
                                       "provider": "EXCHANGERATE_HOST",
-                                      "asOf": "2026-06-17T10:00:00Z"
+                                      "timestamp": "2026-06-17T10:00:00Z"
                                     }
                                     """))),
             @ApiResponse(responseCode = "400", description = "Invalid currency code",
@@ -78,7 +78,7 @@ public class ExchangeRateController {
                                         "BGN": 1.9558
                                       },
                                       "provider": "EXCHANGERATE_HOST",
-                                      "asOf": "2026-06-17T10:00:00Z"
+                                      "timestamp": "2026-06-17T10:00:00Z"
                                     }
                                     """))),
             @ApiResponse(responseCode = "400", description = "Invalid currency code",

@@ -15,5 +15,5 @@ public class ExchangeRateProperties {
 
     @Getter
     @Setter
-    List<ExchangeRateProviderName> providerPriority = List.of();
+    List<ExchangeRateProviderName> providerPriority;
 }
