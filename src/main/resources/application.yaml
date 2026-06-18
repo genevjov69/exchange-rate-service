@@ -1,6 +1,8 @@
 currency-exchange-service:
   configuration:
     conversion-scale: 4
+    cache:
+      ttl: 1m
     exchange-rates:
       provider-priority:
         - EXCHANGERATE_HOST
@@ -8,7 +10,7 @@ currency-exchange-service:
       providers:
         EXCHANGERATE_HOST:
           base-url: https://api.exchangerate.host
-          access-key: ${EXCHANGE_RATE_HOST_ACCESS_KEY:2950b19ed2094bd0e0d5694f7328d070}
+          access-key: ${EXCHANGE_RATE_HOST_ACCESS_KEY:DEFAULT_IF_NEEDED}
         FRANKFURTER:
           base-url: https://api.frankfurter.dev
 

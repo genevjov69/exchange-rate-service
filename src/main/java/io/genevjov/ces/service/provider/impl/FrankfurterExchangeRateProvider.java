@@ -45,7 +45,10 @@ public class FrankfurterExchangeRateProvider implements ExchangeRateProvider {
                     base, ExchangeRateProviderUtils.commaSeparatedCurrencyCodes(targets));
 
             validateResponse(base, response);
-            return mapper.toSnapshot(base, response, PROVIDER);
+            ExchangeRatesSnapshot snapshot = mapper.toSnapshot(base, response, PROVIDER);
+            validateSnapshot(base, snapshot);
+
+            return snapshot;
         } catch (RuntimeException ex) {
             throw ExchangeRateProviderUtils.providerException(PROVIDER, ex);
         }
@@ -53,6 +56,12 @@ public class FrankfurterExchangeRateProvider implements ExchangeRateProvider {
 
     private void validateResponse(Currency base, List<FrankfurterRateResponse> response) {
         if (CollectionUtils.isEmpty(response)) {
+            throw new CurrencyNotFoundException("No exchange rates returned for " + base.getCurrencyCode());
+        }
+    }
+
+    private void validateSnapshot(Currency base, ExchangeRatesSnapshot snapshot) {
+        if (snapshot == null || CollectionUtils.isEmpty(snapshot.rates())) {
             throw new CurrencyNotFoundException("No exchange rates returned for " + base.getCurrencyCode());
         }
     }

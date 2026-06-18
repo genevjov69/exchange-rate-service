@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Currency;
-import java.util.Set;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -47,11 +47,8 @@ public class ConversionService {
 
     public BatchConversionResponse batchConvert(BatchConversionRequest request) {
         validateAmount(request.amount());
-
-        Currency from = request.from();
-        Set<Currency> targets = new LinkedHashSet<>(request.targets());
-
-        ExchangeRatesSnapshot snapshot = exchangeRateService.getExchangeRates(from, targets);
+        List<Currency> targets = new ArrayList<>(new LinkedHashSet<>(request.targets()));
+        ExchangeRatesSnapshot snapshot = exchangeRateService.getExchangeRates(request.from(), targets);
         List<BatchConversionResponse.ConversionItemResponse> conversions = targets.stream()
                 .map(target -> {
                     BigDecimal rate = rate(snapshot, target);
@@ -60,7 +57,7 @@ public class ConversionService {
                 .toList();
 
         return conversionResponseMapper.toBatchConversionResponse(
-                from,
+                request.from(),
                 request.amount(),
                 conversions,
                 snapshot);

@@ -8,17 +8,25 @@ import io.genevjov.ces.model.ExchangeRatesSnapshot;
 import io.genevjov.ces.service.provider.ExchangeRateProvider;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Currency;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Slf4j
 public class ExchangeRateProviderRouter {
 
     Map<ExchangeRateProviderName, ExchangeRateProvider> providersByType;
@@ -51,11 +59,14 @@ public class ExchangeRateProviderRouter {
     private ExchangeRatesSnapshot getRatesWithFallback(Currency base, Collection<Currency> targets) {
         List<String> failures = new ArrayList<>();
         CurrencyNotFoundException notFoundException = null;
+        List<ExchangeRateProviderName> priority = providerPriority();
 
-        for (ExchangeRateProviderName provider : providerPriority()) {
+        for (int index = 0; index < priority.size(); index++) {
+            ExchangeRateProviderName provider = priority.get(index);
             ExchangeRateProvider providerStrategy = providersByType.get(provider);
             if (providerStrategy == null) {
                 failures.add(provider + " has no configured strategy");
+                logFallback(provider, nextProvider(priority, index), "provider strategy is not configured");
                 continue;
             }
 
@@ -66,10 +77,13 @@ public class ExchangeRateProviderRouter {
             } catch (CurrencyNotFoundException ex) {
                 notFoundException = ex;
                 failures.add(provider + ": " + ex.getMessage());
+                logFallback(provider, nextProvider(priority, index), ex.getMessage());
             } catch (ExternalProviderException ex) {
                 failures.add(provider + ": " + ex.getMessage());
+                logFallback(provider, nextProvider(priority, index), ex.getMessage());
             } catch (RuntimeException ex) {
                 failures.add(provider + ": unexpected provider failure: " + ex.getMessage());
+                logFallback(provider, nextProvider(priority, index), ex.getMessage());
             }
         }
 
@@ -78,6 +92,26 @@ public class ExchangeRateProviderRouter {
         }
 
         throw new ExternalProviderException("All exchange rate providers failed: " + String.join("; ", failures));
+    }
+
+    private void logFallback(ExchangeRateProviderName failedProvider, ExchangeRateProviderName nextProvider, String reason) {
+        if (nextProvider == null) {
+            log.warn("Exchange rate provider {} failed and no lower-priority provider remains: {}", failedProvider, reason);
+            return;
+        }
+
+        log.warn("Exchange rate provider {} failed, falling back to {}: {}", failedProvider, nextProvider, reason);
+    }
+
+    private ExchangeRateProviderName nextProvider(List<ExchangeRateProviderName> priority, int currentIndex) {
+        for (int index = currentIndex + 1; index < priority.size(); index++) {
+            ExchangeRateProviderName provider = priority.get(index);
+            if (providersByType.containsKey(provider)) {
+                return provider;
+            }
+        }
+
+        return null;
     }
 
     private void ensureTargetsAvailable(ExchangeRatesSnapshot snapshot, Collection<Currency> targets) {

@@ -47,8 +47,10 @@ public class ExchangerateHostExchangeRateProvider implements ExchangeRateProvide
                     ExchangeRateProviderUtils.commaSeparatedCurrencyCodes(targets));
 
             validateResponse(base, response);
+            ExchangeRatesSnapshot snapshot = mapper.toSnapshot(base, response, PROVIDER);
+            validateSnapshot(base, snapshot);
 
-            return mapper.toSnapshot(base, response, PROVIDER);
+            return snapshot;
         } catch (RuntimeException ex) {
             throw ExchangeRateProviderUtils.providerException(PROVIDER, ex);
         }
@@ -59,11 +61,17 @@ public class ExchangerateHostExchangeRateProvider implements ExchangeRateProvide
             throw new ExternalProviderException("Provider returned an empty response");
         }
 
-        if (!response.success()) {
+        if (Boolean.FALSE.equals(response.success())) {
             throw new ExternalProviderException("Provider rejected the request: " + errorMessage(response.error()));
         }
 
         if (CollectionUtils.isEmpty(response.quotes())) {
+            throw new CurrencyNotFoundException("No exchange rates returned for " + base.getCurrencyCode());
+        }
+    }
+
+    private void validateSnapshot(Currency base, ExchangeRatesSnapshot snapshot) {
+        if (snapshot == null || CollectionUtils.isEmpty(snapshot.rates())) {
             throw new CurrencyNotFoundException("No exchange rates returned for " + base.getCurrencyCode());
         }
     }

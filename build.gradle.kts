@@ -36,6 +36,7 @@ springBoot {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("org.mapstruct:mapstruct:${property("mapstructVersion")}")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.16")
 
