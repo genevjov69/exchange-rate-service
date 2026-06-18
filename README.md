@@ -101,3 +101,12 @@ GET  /api/v1/exchange-rates/{base}/{target}
 GET  /api/v1/conversions?from={from}&to={to}&amount={amount}
 POST /api/v1/conversions/batch
 ```
+## Potential evolution point
+
+Current solutions operates with in-memory cache (Caffeine), and it would be good enough to work as single pod app in cluster environment.
+### BUT
+There is a potential evolution possibility with moving/adding to additional data storage (Redis for example). Such option can be overengineering
+for most cases and possibly can have a collision when pod1 and pod2 at the same time trying to access same base currency data.
+
+Other way- is to introduce some kind of Carlson, JobRunr or (God, I'm sorry :)) Quartz Scheduler to handle scheduled cache updates every minute BY ONE POD only.
+(or just add a spring job with leader flag and have fun like it was 5-6 years ago :))
