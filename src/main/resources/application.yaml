@@ -1,0 +1,4 @@
+currency-exchange-service:
+  configuration:
+    conversion-scale: 4
+
