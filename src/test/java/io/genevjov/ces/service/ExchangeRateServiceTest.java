@@ -16,15 +16,12 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.function.Function;
 
 import static io.genevjov.ces.enums.ExchangeRateProviderName.FRANKFURTER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ExchangeRateServiceTest {
 
@@ -88,13 +85,8 @@ class ExchangeRateServiceTest {
         private final Map<ExchangeRateCacheKey, ExchangeRatesSnapshot> cache = new HashMap<>();
 
         @Override
-        public Optional<ExchangeRatesSnapshot> findByKey(ExchangeRateCacheKey key) {
-            return Optional.ofNullable(cache.get(key));
-        }
-
-        @Override
-        public void save(ExchangeRateCacheKey key, ExchangeRatesSnapshot snapshot) {
-            cache.put(key, snapshot);
+        public ExchangeRatesSnapshot get(ExchangeRateCacheKey key, Function<ExchangeRateCacheKey, ExchangeRatesSnapshot> loader) {
+            return cache.computeIfAbsent(key, loader);
         }
     }
 }

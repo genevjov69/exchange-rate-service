@@ -6,8 +6,8 @@ import io.genevjov.ces.data.ExchangeRateSnapshotStore;
 import io.genevjov.ces.dto.request.BatchConversionRequest;
 import io.genevjov.ces.dto.response.BatchConversionResponse;
 import io.genevjov.ces.dto.response.ConversionResponse;
-import io.genevjov.ces.mapper.ExchangeRateResponseMapper;
 import io.genevjov.ces.mapper.ConversionResponseMapper;
+import io.genevjov.ces.mapper.ExchangeRateResponseMapper;
 import io.genevjov.ces.model.ExchangeRatesSnapshot;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -18,15 +18,12 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.function.Function;
 
 import static io.genevjov.ces.enums.ExchangeRateProviderName.FRANKFURTER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ConversionServiceTest {
 
@@ -83,13 +80,8 @@ class ConversionServiceTest {
         private final Map<ExchangeRateCacheKey, ExchangeRatesSnapshot> cache = new HashMap<>();
 
         @Override
-        public Optional<ExchangeRatesSnapshot> findByKey(ExchangeRateCacheKey key) {
-            return Optional.ofNullable(cache.get(key));
-        }
-
-        @Override
-        public void save(ExchangeRateCacheKey key, ExchangeRatesSnapshot snapshot) {
-            cache.put(key, snapshot);
+        public ExchangeRatesSnapshot get(ExchangeRateCacheKey key, Function<ExchangeRateCacheKey, ExchangeRatesSnapshot> loader) {
+            return cache.computeIfAbsent(key, loader);
         }
     }
 }

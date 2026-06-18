@@ -2,11 +2,9 @@ package io.genevjov.ces.data;
 
 import io.genevjov.ces.model.ExchangeRatesSnapshot;
 
-import java.util.Optional;
+import java.util.function.Function;
 
 public interface ExchangeRateSnapshotStore {
 
-    Optional<ExchangeRatesSnapshot> findByKey(ExchangeRateCacheKey key);
-
-    void save(ExchangeRateCacheKey key, ExchangeRatesSnapshot snapshot);
+    ExchangeRatesSnapshot get(ExchangeRateCacheKey key, Function<ExchangeRateCacheKey, ExchangeRatesSnapshot> loader);
 }

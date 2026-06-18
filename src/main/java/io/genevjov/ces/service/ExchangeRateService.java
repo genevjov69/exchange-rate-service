@@ -9,16 +9,12 @@ import io.genevjov.ces.mapper.ExchangeRateResponseMapper;
 import io.genevjov.ces.model.ExchangeRatesSnapshot;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Currency;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -59,12 +55,9 @@ public class ExchangeRateService {
 
     private ExchangeRatesSnapshot getSnapshot(Currency base) {
         ExchangeRateCacheKey key = ExchangeRateCacheKey.from(base);
-        return exchangeRateSnapshotStore.findByKey(key)
-                .orElseGet(() -> {
-                    log.info("Exchange rate snapshot cache miss for base={}", key.base());
-                    ExchangeRatesSnapshot snapshot = exchangeRateProviderRouter.getLatestRates(base, List.of());
-                    exchangeRateSnapshotStore.save(key, snapshot);
-                    return snapshot;
-                });
+        return exchangeRateSnapshotStore.get(key, missingKey -> {
+            log.info("Exchange rate snapshot cache miss for base={}", missingKey.base());
+            return exchangeRateProviderRouter.getLatestRates(missingKey.base(), List.of());
+        });
     }
 }
