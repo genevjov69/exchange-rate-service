@@ -1,4 +1,25 @@
 currency-exchange-service:
   configuration:
     conversion-scale: 4
+    exchange-rates:
+      provider-priority:
+        - EXCHANGERATE_HOST
+        - FRANKFURTER
+      providers:
+        EXCHANGERATE_HOST:
+          base-url: https://api.exchangerate.host
+          access-key: ${EXCHANGE_RATE_HOST_ACCESS_KEY:2950b19ed2094bd0e0d5694f7328d070}
+        FRANKFURTER:
+          base-url: https://api.frankfurter.dev
 
+spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          exchangerate-host:
+            connect-timeout: 3000
+            read-timeout: 3000
+          frankfurter:
+            connect-timeout: 3000
+            read-timeout: 3000

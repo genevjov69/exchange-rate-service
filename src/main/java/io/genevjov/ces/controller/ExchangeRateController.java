@@ -65,7 +65,7 @@ public class ExchangeRateController {
     @GetMapping("/{base}")
     @Operation(
             summary = "Get all exchange rates for a base currency",
-            description = "Fetches and caches the latest available rates for the supplied base currency. Cache key is the normalized base currency.")
+            description = "Fetches the latest available rates for the supplied base currency using the configured provider priority.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Exchange rates returned",
                     content = @Content(schema = @Schema(implementation = BatchExchangeRatesResponse.class),

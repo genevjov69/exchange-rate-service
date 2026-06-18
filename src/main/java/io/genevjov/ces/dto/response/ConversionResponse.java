@@ -1,6 +1,6 @@
 package io.genevjov.ces.dto.response;
 
-import io.genevjov.ces.enums.ExchangeRateProvider;
+import io.genevjov.ces.enums.ExchangeRateProviderName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
@@ -20,6 +20,6 @@ public record ConversionResponse(
         @Schema(example = "108.0000")
         BigDecimal convertedAmount,
         @Schema(example = "EXCHANGERATE_HOST")
-        ExchangeRateProvider provider,
+        ExchangeRateProviderName provider,
         @Schema(example = "2026-06-17T10:00:00Z") Instant timestamp) {
 }

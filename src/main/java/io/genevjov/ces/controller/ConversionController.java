@@ -33,7 +33,7 @@ public class ConversionController {
     @GetMapping
     @Operation(
             summary = "Convert one amount to one target currency",
-            description = "Converts a positive decimal amount from one currency to another using the cached latest rate snapshot for the base currency.")
+            description = "Converts a positive decimal amount from one currency to another using the latest rate snapshot for the base currency.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Conversion returned",
                     content = @Content(schema = @Schema(implementation = ConversionResponse.class),
@@ -68,7 +68,7 @@ public class ConversionController {
     @PostMapping("/batch")
     @Operation(
             summary = "Convert one amount to multiple target currencies",
-            description = "Converts a positive decimal amount from one currency to a de-duplicated ordered list of target currencies using one cached base snapshot.")
+            description = "Converts a positive decimal amount from one currency to a de-duplicated ordered list of target currencies using one latest base snapshot.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Batch conversions returned",
                     content = @Content(schema = @Schema(implementation = BatchConversionResponse.class),
