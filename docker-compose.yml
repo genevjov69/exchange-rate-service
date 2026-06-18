@@ -4,4 +4,4 @@ services:
     ports:
       - "8080:8080"
     environment:
-      EXCHANGE_RATE_HOST_ACCESS_KEY: CHANGE_ME
+      EXCHANGE_RATE_HOST_ACCESS_KEY: $
