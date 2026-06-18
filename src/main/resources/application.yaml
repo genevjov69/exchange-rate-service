@@ -10,7 +10,7 @@ currency-exchange-service:
       providers:
         EXCHANGERATE_HOST:
           base-url: https://api.exchangerate.host
-          access-key: ${EXCHANGE_RATE_HOST_ACCESS_KEY:DEFAULT_IF_NEEDED}
+          access-key: ${EXCHANGE_RATE_HOST_ACCESS_KEY:}
         FRANKFURTER:
           base-url: https://api.frankfurter.dev
 
